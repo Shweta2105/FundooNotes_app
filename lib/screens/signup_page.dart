@@ -1,6 +1,7 @@
 import 'dart:core';
 
 import 'package:flutter/material.dart';
+import 'package:fundo_notes/utils/firebase_curd.dart';
 import 'package:hexcolor/hexcolor.dart';
 import 'package:fundo_notes/screens/base_screen.dart';
 
@@ -26,6 +27,8 @@ class SignUpPageState extends BaseScreenState {
   bool matchPassword = true;
   RegExp emailRegExp = new RegExp(
       r"^[a-zA-Z0-9.a-zA-Z0-9.!#$%&'*+-/=?^_`{|}~]+@[a-zA-Z0-9]+\.[a-zA-Z]+");
+  RegExp passwordRegExp =
+      new RegExp(r"^(?=.*?[0-9a-zA-Z])[0-9a-zA-Z]*[@#$%!][0-9a-zA-Z]*$");
 
   void initState() {
     fnameController = TextEditingController();
@@ -60,10 +63,6 @@ class SignUpPageState extends BaseScreenState {
     return AppBar(
       automaticallyImplyLeading: false,
       backgroundColor: HexColor('#FFFFFF'),
-      title: Text(
-        'Fundo_Notes',
-        style: TextStyle(fontSize: 20.0, color: HexColor('#96C3EB')),
-      ),
       centerTitle: true,
     );
   }
@@ -221,9 +220,11 @@ class SignUpPageState extends BaseScreenState {
                     focusNode: passwordFocus,
                     onTap: _passwordRequestFocus,
                     onChanged: (value) {
-                      value.length >= 6
-                          ? passwordValid = true
-                          : passwordValid = false;
+                      if (passwordRegExp.hasMatch(value)) {
+                        passwordValid = true;
+                      } else {
+                        passwordValid = false;
+                      }
                       setState(() {});
                     },
                     style: new TextStyle(
@@ -261,11 +262,23 @@ class SignUpPageState extends BaseScreenState {
                   textColor: Colors.white,
                   color: Colors.blue,
                   child: Text('SignUp'),
-                  onPressed: () {
-                    print(fnameController.text);
-                    print(lnameController.text);
-                    print(emailController.text);
-                    print(passwordController.text);
+                  onPressed: () async {
+                    if (fnameController.text.isEmpty &&
+                        lnameController.text.isEmpty &&
+                        emailController.text.isEmpty) {
+                      Navigator.pop(context);
+                    } else {
+                      await Database.addUser(
+                          fname: fnameController.text,
+                          lname: lnameController.text,
+                          emailId: emailController.text,
+                          password: passwordController.text);
+                      Navigator.pop(context);
+                    }
+                    // print(fnameController.text);
+                    //print(lnameController.text);
+                    //print(emailController.text);
+                    //print(passwordController.text);
                   },
                 )),
             Container(

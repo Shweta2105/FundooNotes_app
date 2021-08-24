@@ -1,3 +1,4 @@
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:fundo_notes/constance/firebaseConfig.dart';
 import 'package:fundo_notes/screens/forgot_password.dart';

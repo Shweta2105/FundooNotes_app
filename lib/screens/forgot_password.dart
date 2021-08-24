@@ -26,11 +26,7 @@ class Forgot_PasswordScreen extends BaseScreenState {
   Widget getAppBar() {
     return AppBar(
       automaticallyImplyLeading: false,
-      backgroundColor: HexColor('#446DFF'),
-      title: Text(
-        'Fundo_Notes',
-        style: TextStyle(fontSize: 20.0, color: HexColor('#FFFFFF')),
-      ),
+      backgroundColor: HexColor('#FFFFFF'),
       centerTitle: true,
     );
   }

@@ -19,6 +19,8 @@ class LoginPageState extends BaseScreenState {
   bool passwordValid = true;
   RegExp emailRegExp = new RegExp(
       r"^[a-zA-Z0-9.a-zA-Z0-9.!#$%&'*+-/=?^_`{|}~]+@[a-zA-Z0-9]+\.[a-zA-Z]+");
+  RegExp passwordRegExp =
+      new RegExp(r"^(?=.*?[0-9a-zA-Z])[0-9a-zA-Z]*[@#$%!][0-9a-zA-Z]*$");
   @override
   void initState() {
     emailController = TextEditingController();
@@ -40,11 +42,7 @@ class LoginPageState extends BaseScreenState {
   Widget getAppBar() {
     return AppBar(
       automaticallyImplyLeading: false,
-      backgroundColor: HexColor('#446DFF'),
-      title: Text(
-        'Fundo_Notes',
-        style: TextStyle(fontSize: 20.0, color: HexColor('#FFFFFF')),
-      ),
+      backgroundColor: HexColor('#FFFFFF'),
       centerTitle: true,
     );
   }
@@ -134,9 +132,11 @@ class LoginPageState extends BaseScreenState {
                     focusNode: passwordFocus,
                     onTap: _passwordRequestFocus,
                     onChanged: (value) {
-                      value.length >= 6
-                          ? passwordValid = true
-                          : passwordValid = false;
+                      if (passwordRegExp.hasMatch(value)) {
+                        passwordValid = true;
+                      } else {
+                        passwordValid = false;
+                      }
                       setState(() {});
                     },
                     style: new TextStyle(
