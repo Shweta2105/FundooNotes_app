@@ -3,12 +3,15 @@ import 'dart:core';
 import 'package:flutter/material.dart';
 import 'package:hexcolor/hexcolor.dart';
 import 'package:fundo_notes/screens/base_screen.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class LoginPage extends BaseScreen {
   @override
   // ignore: unnecessary_new
   LoginPageState createState() => new LoginPageState();
 }
+
+//SharedPreferences localStorage;
 
 class LoginPageState extends BaseScreenState {
   TextEditingController emailController = TextEditingController();
@@ -43,29 +46,25 @@ class LoginPageState extends BaseScreenState {
     return AppBar(
       automaticallyImplyLeading: false,
       backgroundColor: HexColor('#FFFFFF'),
+      title: Text('FundoNotes Login',
+          style: TextStyle(
+            color: HexColor('#96C3EB'),
+            fontWeight: FontWeight.w500,
+            fontSize: 25,
+            fontStyle: FontStyle.italic,
+          )),
       centerTitle: true,
     );
   }
 
   @override
   Widget getBody(BuildContext context) {
+    SnackBar snackBar;
     return Scaffold(
       body: Padding(
         padding: EdgeInsets.all(10),
         child: ListView(
           children: <Widget>[
-            Container(
-              alignment: Alignment.center,
-              padding: EdgeInsets.all(10),
-              child: Text(
-                'FundoNotes Login',
-                style: TextStyle(
-                  color: HexColor('#96C3EB'),
-                  fontWeight: FontWeight.w500,
-                  fontSize: 25,
-                ),
-              ),
-            ),
             Container(
               alignment: Alignment.center,
               padding: EdgeInsets.all(10),
@@ -86,6 +85,7 @@ class LoginPageState extends BaseScreenState {
               ),
             ),
             Container(
+              height: 100,
               padding: EdgeInsets.fromLTRB(10, 10, 10, 0),
               child: TextField(
                 controller: emailController,
@@ -124,6 +124,7 @@ class LoginPageState extends BaseScreenState {
               ),
             ),
             Container(
+              height: 100,
               padding: EdgeInsets.fromLTRB(10, 10, 10, 0),
               child: Container(
                 child: SizedBox(
@@ -190,14 +191,22 @@ class LoginPageState extends BaseScreenState {
                 height: 50,
                 padding: EdgeInsets.fromLTRB(10, 0, 10, 0),
                 child: RaisedButton(
-                  textColor: Colors.white,
-                  color: Colors.blue,
-                  child: Text('Login'),
-                  onPressed: () {
-                    print(emailController.text);
-                    print(passwordController.text);
-                  },
-                )),
+                    textColor: Colors.white,
+                    color: Colors.blue,
+                    child: Text('Login',
+                        style: TextStyle(
+                          fontSize: 15,
+                        )),
+                    onPressed: () => {
+                          Navigator.pushNamed(context, '/home'),
+                          {
+                            snackBar = SnackBar(
+                                content:
+                                    const Text("Successfully Logged in..!!"))
+                          }
+                          //print(emailController.text);
+                          // print(passwordController.text);
+                        })),
             Container(
                 child: Row(
               children: <Widget>[
@@ -206,7 +215,7 @@ class LoginPageState extends BaseScreenState {
                   textColor: Colors.blue,
                   child: Text(
                     'Sign in',
-                    style: TextStyle(fontSize: 20),
+                    style: TextStyle(fontSize: 15),
                   ),
                   onPressed: () {
                     Navigator.pushNamed(context, '/signup_page');

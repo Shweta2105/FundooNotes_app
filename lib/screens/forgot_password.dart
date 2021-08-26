@@ -27,6 +27,15 @@ class Forgot_PasswordScreen extends BaseScreenState {
     return AppBar(
       automaticallyImplyLeading: false,
       backgroundColor: HexColor('#FFFFFF'),
+      title:Text('FundoNotes Forgot Password',
+      style: TextStyle(
+        color: HexColor('#96C3EB'),
+                  fontWeight: FontWeight.w500,
+                  fontSize: 25,
+                  fontStyle: FontStyle.italic,
+      )),
+      
+
       centerTitle: true,
     );
   }
@@ -42,7 +51,7 @@ class Forgot_PasswordScreen extends BaseScreenState {
                 alignment: Alignment.center,
                 padding: EdgeInsets.all(10),
                 child: Text(
-                  'FundoNotes Forgot Password',
+                  '',
                   style: TextStyle(
                     color: HexColor('#96C3EB'),
                     fontWeight: FontWeight.w500,

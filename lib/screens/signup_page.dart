@@ -59,10 +59,20 @@ class SignUpPageState extends BaseScreenState {
     });
   }
 
+  // ignore: prefer_typing_uninitialized_variables
+  late final snackBar;
+
   Widget getAppBar() {
     return AppBar(
       automaticallyImplyLeading: false,
       backgroundColor: HexColor('#FFFFFF'),
+      title: Text('FundoNotes SignUp',
+          style: TextStyle(
+            color: HexColor('#96C3EB'),
+            fontWeight: FontWeight.w500,
+            fontSize: 25,
+            fontStyle: FontStyle.italic,
+          )),
       centerTitle: true,
     );
   }
@@ -74,18 +84,6 @@ class SignUpPageState extends BaseScreenState {
         padding: EdgeInsets.all(10),
         child: ListView(
           children: <Widget>[
-            Container(
-              alignment: Alignment.center,
-              padding: EdgeInsets.all(10),
-              child: Text(
-                'FundoNotes SignUp',
-                style: TextStyle(
-                  color: HexColor('#96C3EB'),
-                  fontWeight: FontWeight.w100,
-                  fontSize: 20,
-                ),
-              ),
-            ),
             Container(
               alignment: Alignment.center,
               padding: EdgeInsets.all(10),
@@ -106,6 +104,7 @@ class SignUpPageState extends BaseScreenState {
               ),
             ),
             Container(
+              height: 100,
               padding: EdgeInsets.fromLTRB(10, 10, 10, 0),
               child: TextField(
                 controller: fnameController,
@@ -140,6 +139,7 @@ class SignUpPageState extends BaseScreenState {
               ),
             ),
             Container(
+              height: 100,
               padding: EdgeInsets.fromLTRB(10, 10, 10, 0),
               child: TextField(
                 controller: lnameController,
@@ -174,6 +174,7 @@ class SignUpPageState extends BaseScreenState {
               ),
             ),
             Container(
+              height: 100,
               padding: EdgeInsets.fromLTRB(10, 10, 10, 0),
               child: TextField(
                 controller: emailController,
@@ -212,6 +213,7 @@ class SignUpPageState extends BaseScreenState {
               ),
             ),
             Container(
+              height: 100,
               padding: EdgeInsets.fromLTRB(10, 10, 10, 0),
               child: Container(
                 child: SizedBox(
@@ -233,6 +235,10 @@ class SignUpPageState extends BaseScreenState {
                         color: HexColor('#606E74')),
                     decoration: InputDecoration(
                         labelText: 'Password',
+                        icon: const Padding(
+                          padding: const EdgeInsets.only(top: 15.0),
+                          child: const Icon(Icons.lock),
+                        ),
                         errorText: passwordValid ? null : "Invalid password",
                         errorStyle: const TextStyle(fontSize: 15),
                         labelStyle: TextStyle(
@@ -261,7 +267,10 @@ class SignUpPageState extends BaseScreenState {
                 child: RaisedButton(
                   textColor: Colors.white,
                   color: Colors.blue,
-                  child: Text('SignUp'),
+                  child: Text(
+                    'SignUp',
+                    style: TextStyle(fontSize: 15),
+                  ),
                   onPressed: () async {
                     if (fnameController.text.isEmpty &&
                         lnameController.text.isEmpty &&
@@ -275,6 +284,15 @@ class SignUpPageState extends BaseScreenState {
                           password: passwordController.text);
                       Navigator.pop(context);
                     }
+                    ;
+                    {
+                      final snackBar = SnackBar(
+                        content: const Text('SuccessFully Signed in.. !'),
+                      );
+                      ScaffoldMessenger.of(context).showSnackBar(snackBar);
+                    }
+                    ;
+
                     // print(fnameController.text);
                     //print(lnameController.text);
                     //print(emailController.text);
@@ -288,7 +306,7 @@ class SignUpPageState extends BaseScreenState {
                   textColor: Colors.blue,
                   child: Text(
                     'Login',
-                    style: TextStyle(fontSize: 20),
+                    style: TextStyle(fontSize: 15),
                   ),
                   onPressed: () {
                     Navigator.pushNamed(context, '/login_page');
