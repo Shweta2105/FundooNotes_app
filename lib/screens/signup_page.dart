@@ -236,8 +236,7 @@ class SignUpPageState extends BaseScreenState {
                     decoration: InputDecoration(
                         labelText: 'Password',
                         icon: const Padding(
-                          padding: const EdgeInsets.only(top: 15.0),
-                          child: const Icon(Icons.lock),
+                          padding: const EdgeInsets.only(top: 10.0),
                         ),
                         errorText: passwordValid ? null : "Invalid password",
                         errorStyle: const TextStyle(fontSize: 15),

@@ -1,6 +1,9 @@
+import 'dart:convert';
 import 'dart:core';
 
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:fundo_notes/screens/home.dart';
 import 'package:hexcolor/hexcolor.dart';
 import 'package:fundo_notes/screens/base_screen.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -11,9 +14,12 @@ class LoginPage extends BaseScreen {
   LoginPageState createState() => new LoginPageState();
 }
 
-//SharedPreferences localStorage;
+//late SharedPreferences localStorage;
 
 class LoginPageState extends BaseScreenState {
+  final databaseReference = FirebaseFirestore.instance;
+  CollectionReference _collectionRef =
+      FirebaseFirestore.instance.collection('users');
   TextEditingController emailController = TextEditingController();
   FocusNode passwordFocus = new FocusNode();
   FocusNode emailFocus = new FocusNode();
@@ -24,9 +30,31 @@ class LoginPageState extends BaseScreenState {
       r"^[a-zA-Z0-9.a-zA-Z0-9.!#$%&'*+-/=?^_`{|}~]+@[a-zA-Z0-9]+\.[a-zA-Z]+");
   RegExp passwordRegExp =
       new RegExp(r"^(?=.*?[0-9a-zA-Z])[0-9a-zA-Z]*[@#$%!][0-9a-zA-Z]*$");
+
+  final firestoreInstance = FirebaseFirestore.instance;
+  Future<void> getData() async {
+    // Get docs from collection reference
+    QuerySnapshot querySnapshot = await _collectionRef.get();
+
+    // Get data from docs and convert map to List
+    final allData = querySnapshot.docs.map((doc) => doc.data()).toList();
+    print(allData);
+  }
+
+  _submit() async {
+    CollectionReference collection =
+        FirebaseFirestore.instance.collection('user');
+    final SnapShot = collection.snapshots().map((SnapShot) => SnapShot.docs
+        .where((doc) =>
+            doc['email'] == emailController.text ||
+            doc['password'] == passwordController.text));
+    return (await SnapShot.first).toList();
+  }
+
   @override
   void initState() {
     emailController = TextEditingController();
+    getData();
     super.initState();
   }
 
@@ -129,6 +157,7 @@ class LoginPageState extends BaseScreenState {
               child: Container(
                 child: SizedBox(
                   child: TextField(
+                    obscureText: true,
                     controller: passwordController,
                     focusNode: passwordFocus,
                     onTap: _passwordRequestFocus,
@@ -197,16 +226,48 @@ class LoginPageState extends BaseScreenState {
                         style: TextStyle(
                           fontSize: 15,
                         )),
-                    onPressed: () => {
-                          Navigator.pushNamed(context, '/home'),
-                          {
+                    onPressed: () async {
+                      SharedPreferences preferences =
+                          await SharedPreferences.getInstance();
+                      preferences.setString('email', emailController.text);
+                      Navigator.pushReplacement(
+                          context,
+                          MaterialPageRoute(
+                              builder: (BuildContext ctx) => HomeScreen()));
+                      _submit();
+                      String Email = emailController.text;
+                      String password = passwordController.text;
+                      FirebaseFirestore.instance
+                          .collection('users')
+                          .get()
+                          .then((querySnapshot) {
+                        querySnapshot.docs.forEach((docs) {
+                          print(docs["emailId"]);
+                          print(docs.id);
+                          print(docs["password"]);
+                          if ((docs["emailId"] == '${emailController.text}') &&
+                              (docs["password"] ==
+                                  '${passwordController.text}')) {
+                            print("user login successful");
                             snackBar = SnackBar(
-                                content:
-                                    const Text("Successfully Logged in..!!"))
+                              content: Text("successfull login"),
+                              duration: Duration(seconds: 1),
+                            );
+                            ScaffoldMessenger.of(context)
+                                .showSnackBar(snackBar);
+                            Navigator.pushNamed(context, '/home');
+                          } else {
+                            snackBar = SnackBar(
+                              content: Text("login failed..!!"),
+                              duration: Duration(seconds: 1),
+                            );
+                            ScaffoldMessenger.of(context)
+                                .showSnackBar(snackBar);
+                            Navigator.pushNamed(context, '/login_page');
                           }
-                          //print(emailController.text);
-                          // print(passwordController.text);
-                        })),
+                        });
+                      });
+                    })),
             Container(
                 child: Row(
               children: <Widget>[

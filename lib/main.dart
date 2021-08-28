@@ -2,13 +2,19 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:fundo_notes/constance/firebaseConfig.dart';
 import 'package:fundo_notes/screens/forgot_password.dart';
+import 'package:fundo_notes/screens/home.dart';
 import 'package:fundo_notes/screens/login_page.dart';
 import 'package:fundo_notes/screens/signup_page.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp();
+  SharedPreferences preferences = await SharedPreferences.getInstance();
+  var email = preferences.getString('emailId');
+  print(email);
   runApp(MaterialApp(
+    home: email == null ? LoginPage() : HomeScreen(),
     title: 'Fundoo Notes',
     theme: ThemeData(
       primarySwatch: Colors.blue,
@@ -19,6 +25,7 @@ void main() async {
       '/loginpage': (context) => LoginPage(),
       '/forgot_password': (context) => Forgot_Password(),
       '/signup_page': (context) => SignUpPage(),
+      '/home': (context) => HomeScreen(),
     },
   ));
 }
