@@ -1,6 +1,7 @@
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:fundo_notes/constance/firebaseConfig.dart';
+import 'package:fundo_notes/screens/create_note.dart';
 import 'package:fundo_notes/screens/forgot_password.dart';
 import 'package:fundo_notes/screens/home.dart';
 import 'package:fundo_notes/screens/login_page.dart';
@@ -26,6 +27,7 @@ void main() async {
       '/forgot_password': (context) => Forgot_Password(),
       '/signup_page': (context) => SignUpPage(),
       '/home': (context) => HomeScreen(),
+      '/create_note': (context) => Create_note(),
     },
   ));
 }

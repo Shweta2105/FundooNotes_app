@@ -18,6 +18,7 @@ class LoginPage extends BaseScreen {
 
 class LoginPageState extends BaseScreenState {
   final databaseReference = FirebaseFirestore.instance;
+
   CollectionReference _collectionRef =
       FirebaseFirestore.instance.collection('users');
   TextEditingController emailController = TextEditingController();
@@ -32,13 +33,18 @@ class LoginPageState extends BaseScreenState {
       new RegExp(r"^(?=.*?[0-9a-zA-Z])[0-9a-zA-Z]*[@#$%!][0-9a-zA-Z]*$");
 
   final firestoreInstance = FirebaseFirestore.instance;
-  Future<void> getData() async {
-    // Get docs from collection reference
-    QuerySnapshot querySnapshot = await _collectionRef.get();
 
-    // Get data from docs and convert map to List
-    final allData = querySnapshot.docs.map((doc) => doc.data()).toList();
-    print(allData);
+  late SharedPreferences logindata;
+  late bool newuser;
+  Future<void> getData() async {
+    logindata = await SharedPreferences.getInstance();
+    newuser = (logindata.getBool('login') ?? true);
+
+    print(newuser);
+    if (newuser == false) {
+      Navigator.pushReplacement(context,
+          MaterialPageRoute(builder: (BuildContext ctx) => HomeScreen()));
+    }
   }
 
   _submit() async {
@@ -227,13 +233,6 @@ class LoginPageState extends BaseScreenState {
                           fontSize: 15,
                         )),
                     onPressed: () async {
-                      SharedPreferences preferences =
-                          await SharedPreferences.getInstance();
-                      preferences.setString('email', emailController.text);
-                      Navigator.pushReplacement(
-                          context,
-                          MaterialPageRoute(
-                              builder: (BuildContext ctx) => HomeScreen()));
                       _submit();
                       String Email = emailController.text;
                       String password = passwordController.text;
@@ -245,17 +244,24 @@ class LoginPageState extends BaseScreenState {
                           print(docs["emailId"]);
                           print(docs.id);
                           print(docs["password"]);
-                          if ((docs["emailId"] == '${emailController.text}') &&
-                              (docs["password"] ==
-                                  '${passwordController.text}')) {
+
+                          if ((docs["emailId"] != '') &&
+                              (docs["password"] != '')) {
                             print("user login successful");
+                            logindata.setBool('login', false);
+
+                            logindata.setString('emailId', Email);
                             snackBar = SnackBar(
                               content: Text("successfull login"),
                               duration: Duration(seconds: 1),
                             );
                             ScaffoldMessenger.of(context)
                                 .showSnackBar(snackBar);
-                            Navigator.pushNamed(context, '/home');
+                            Navigator.pushReplacement(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (BuildContext ctx) =>
+                                        HomeScreen()));
                           } else {
                             snackBar = SnackBar(
                               content: Text("login failed..!!"),
@@ -263,10 +269,17 @@ class LoginPageState extends BaseScreenState {
                             );
                             ScaffoldMessenger.of(context)
                                 .showSnackBar(snackBar);
-                            Navigator.pushNamed(context, '/login_page');
+                            Navigator.pushReplacement(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (BuildContext ctx) =>
+                                        LoginPage()));
                           }
                         });
                       });
+                      SharedPreferences preferences =
+                          await SharedPreferences.getInstance();
+                      preferences.setString('email', emailController.text);
                     })),
             Container(
                 child: Row(

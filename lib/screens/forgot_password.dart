@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:fundo_notes/screens/base_screen.dart';
@@ -9,17 +10,21 @@ class Forgot_Password extends BaseScreen {
 }
 
 class Forgot_PasswordScreen extends BaseScreenState {
-  TextEditingController passwordController = TextEditingController();
-  FocusNode passwordFocus = new FocusNode();
-  bool passwordValid = true;
+  CollectionReference _collectionRef =
+      FirebaseFirestore.instance.collection('users');
+  TextEditingController emailController = TextEditingController();
+  FocusNode? emailFocus = new FocusNode();
+  bool emailValid = true;
+  RegExp emailRegExp = new RegExp(
+      r"^[a-zA-Z0-9.a-zA-Z0-9.!#$%&'*+-/=?^_`{|}~]+@[a-zA-Z0-9]+\.[a-zA-Z]+");
   @override
   void initState() {
     super.initState();
   }
 
-  _passwordRequestFocus() {
+  _emailRequestFocus() {
     setState(() {
-      FocusScope.of(context).requestFocus(passwordFocus);
+      FocusScope.of(context).requestFocus(emailFocus);
     });
   }
 
@@ -27,15 +32,13 @@ class Forgot_PasswordScreen extends BaseScreenState {
     return AppBar(
       automaticallyImplyLeading: false,
       backgroundColor: HexColor('#FFFFFF'),
-      title:Text('FundoNotes Forgot Password',
-      style: TextStyle(
-        color: HexColor('#96C3EB'),
-                  fontWeight: FontWeight.w500,
-                  fontSize: 25,
-                  fontStyle: FontStyle.italic,
-      )),
-      
-
+      title: Text('FundoNotes Forgot Password',
+          style: TextStyle(
+            color: HexColor('#96C3EB'),
+            fontWeight: FontWeight.w500,
+            fontSize: 25,
+            fontStyle: FontStyle.italic,
+          )),
       centerTitle: true,
     );
   }
@@ -83,13 +86,15 @@ class Forgot_PasswordScreen extends BaseScreenState {
                 child: Container(
                   child: SizedBox(
                     child: TextField(
-                      controller: passwordController,
-                      focusNode: passwordFocus,
-                      onTap: _passwordRequestFocus,
+                      controller: emailController,
+                      focusNode: emailFocus,
+                      onTap: _emailRequestFocus,
                       onChanged: (value) {
-                        value.length >= 6
-                            ? passwordValid = true
-                            : passwordValid = false;
+                        if (emailRegExp.hasMatch(value)) {
+                          emailValid = true;
+                        } else {
+                          emailValid = false;
+                        }
                         setState(() {});
                       },
                       style: new TextStyle(
@@ -98,11 +103,11 @@ class Forgot_PasswordScreen extends BaseScreenState {
                           color: HexColor('#606E74')),
                       decoration: InputDecoration(
                           labelText: 'Password',
-                          errorText: passwordValid ? null : "Invalid password",
+                          errorText: emailValid ? null : "Invalid password",
                           errorStyle: const TextStyle(fontSize: 15),
                           labelStyle: TextStyle(
-                              color: passwordFocus.hasFocus
-                                  ? passwordValid
+                              color: emailFocus!.hasFocus
+                                  ? emailValid
                                       ? Colors.amberAccent
                                       : Colors.red
                                   : HexColor('#658292')),
@@ -112,7 +117,7 @@ class Forgot_PasswordScreen extends BaseScreenState {
                           focusedBorder: OutlineInputBorder(
                             borderRadius:
                                 const BorderRadius.all(Radius.circular(4)),
-                            borderSide: passwordFocus.hasFocus
+                            borderSide: emailFocus!.hasFocus
                                 ? const BorderSide(
                                     color: Colors.amber, width: 1.2)
                                 : BorderSide(color: HexColor('#658292')),
@@ -129,7 +134,15 @@ class Forgot_PasswordScreen extends BaseScreenState {
                     color: Colors.blue,
                     child: Text('Login'),
                     onPressed: () {
-                      print(passwordController.text);
+                      print(emailController.text);
+                      FirebaseFirestore.instance
+                          .collection('users')
+                          .get()
+                          .then((querySnapshot) {
+                        querySnapshot.docs.forEach((docs) {
+                          print(docs["emailId"]);
+                        });
+                      });
                     },
                   )),
             ],

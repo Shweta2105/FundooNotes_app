@@ -12,7 +12,6 @@ class HomeScreenState extends BaseScreenState {
   void initState() {
     super.initState();
   }
-
   /* Widget getAppBar() {
     return AppBar(
       automaticallyImplyLeading: false,
@@ -54,15 +53,17 @@ class HomeScreenState extends BaseScreenState {
               onPressed: () {},
               icon: Icon(
                 Icons.settings_power,
+                color: Colors.black,
               )),
           CircleAvatar(),
         ],
       ),
       body: const Center(child: Text('Press the button below!')),
       floatingActionButton: FloatingActionButton(
-          onPressed: () {
-            // Add your onPressed code here!
-          },
+          onPressed: () => {
+                Navigator.pushNamed(context, '/create_note'),
+                // Add your onPressed code here!
+              },
           child: const Icon(
             Icons.add_circle,
             color: Colors.blue,
@@ -70,15 +71,32 @@ class HomeScreenState extends BaseScreenState {
       bottomNavigationBar: BottomNavigationBar(
         items: const <BottomNavigationBarItem>[
           BottomNavigationBarItem(
-            icon: Icon(Icons.check_box),
+            title: Text(''),
+            icon: Icon(
+              Icons.check_box,
+              color: Colors.black26,
+            ),
           ),
           BottomNavigationBarItem(
-            icon: Icon(Icons.brush),
+            title: Text(''),
+            icon: Icon(
+              Icons.brush,
+              color: Colors.black26,
+            ),
           ),
           BottomNavigationBarItem(
-            icon: Icon(Icons.mic),
+            title: Text(''),
+            icon: Icon(
+              Icons.mic,
+              color: Colors.black26,
+            ),
           ),
-          BottomNavigationBarItem(icon: Icon(Icons.photo)),
+          BottomNavigationBarItem(
+              title: Text(''),
+              icon: Icon(
+                Icons.photo,
+                color: Colors.black26,
+              )),
         ],
       ),
     );

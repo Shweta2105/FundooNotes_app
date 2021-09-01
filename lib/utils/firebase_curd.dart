@@ -25,4 +25,12 @@ class Database {
         .whenComplete(() => print("User added in firebase"))
         .catchError((e) => print(e));
   }
+
+  static Future<void> updateUser({
+    required String emailId,
+    required String password,
+  }) async {
+    DocumentReference _documentReference = _mainCollection.doc();
+    
+  }
 }

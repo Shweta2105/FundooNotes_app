@@ -218,6 +218,7 @@ class SignUpPageState extends BaseScreenState {
               child: Container(
                 child: SizedBox(
                   child: TextField(
+                    obscureText: true,
                     controller: passwordController,
                     focusNode: passwordFocus,
                     onTap: _passwordRequestFocus,
