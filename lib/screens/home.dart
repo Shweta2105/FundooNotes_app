@@ -1,6 +1,8 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:fundo_notes/screens/base_screen.dart';
+import 'package:fundo_notes/screens/create_note.dart';
 import 'package:hexcolor/hexcolor.dart';
 
 class HomeScreen extends BaseScreen {
@@ -9,6 +11,8 @@ class HomeScreen extends BaseScreen {
 }
 
 class HomeScreenState extends BaseScreenState {
+  CollectionReference ref = FirebaseFirestore.instance.collection('notes');
+
   void initState() {
     super.initState();
   }
@@ -37,6 +41,7 @@ class HomeScreenState extends BaseScreenState {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        elevation: 0.0,
         leading: Icon(
           Icons.menu,
           color: Colors.black,
@@ -49,55 +54,89 @@ class HomeScreenState extends BaseScreenState {
                 Icons.grid_view,
                 color: Colors.black,
               )),
-          IconButton(
-              onPressed: () {},
-              icon: Icon(
-                Icons.settings_power,
-                color: Colors.black,
-              )),
           CircleAvatar(),
         ],
       ),
-      body: const Center(child: Text('Press the button below!')),
+      body: StreamBuilder(
+          stream: ref.snapshots(),
+          builder: (context, AsyncSnapshot<QuerySnapshot> snapshot) {
+            if (!snapshot.hasData) {
+              return Center(
+                child: Text(
+                  'loading',
+                  style: TextStyle(
+                    fontSize: 12,
+                    color: Colors.black12,
+                  ),
+                ),
+              );
+            } else {
+              return GridView.builder(
+                  gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                      crossAxisCount: 2),
+                  itemCount: snapshot.hasData ? snapshot.data!.docs.length : 0,
+                  itemBuilder: (_, index) {
+                    return Container(
+                      margin: EdgeInsets.all(10),
+                      height: 150,
+                      color: Colors.grey[200],
+                      child: Column(
+                        children: [
+                          // Text(snapshot.data!.docs[index].data['title'])
+                        ],
+                      ),
+                    );
+                  });
+            }
+          }),
+
+      //backgroundColor: Colors.white,
       floatingActionButton: FloatingActionButton(
           onPressed: () => {
-                Navigator.pushNamed(context, '/create_note'),
+                Navigator.push(
+                    context, MaterialPageRoute(builder: (_) => Create_note())),
                 // Add your onPressed code here!
               },
           child: const Icon(
-            Icons.add_circle,
-            color: Colors.blue,
+            Icons.add,
           )),
-      bottomNavigationBar: BottomNavigationBar(
-        items: const <BottomNavigationBarItem>[
-          BottomNavigationBarItem(
-            title: Text(''),
-            icon: Icon(
-              Icons.check_box,
-              color: Colors.black26,
-            ),
+      bottomNavigationBar: BottomAppBar(
+        child: Container(
+          color: Colors.white,
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.start,
+            children: <Widget>[
+              IconButton(
+                  onPressed: () {},
+                  icon: Icon(
+                    Icons.check_box,
+                    size: 25,
+                    color: Colors.black,
+                  )),
+              IconButton(
+                  onPressed: () {},
+                  icon: Icon(
+                    Icons.color_lens,
+                    size: 25,
+                    color: Colors.black,
+                  )),
+              IconButton(
+                  onPressed: () {},
+                  icon: Icon(
+                    Icons.mic,
+                    size: 25,
+                    color: Colors.black,
+                  )),
+              IconButton(
+                  onPressed: () {},
+                  icon: Icon(
+                    Icons.photo,
+                    size: 25,
+                    color: Colors.black,
+                  )),
+            ],
           ),
-          BottomNavigationBarItem(
-            title: Text(''),
-            icon: Icon(
-              Icons.brush,
-              color: Colors.black26,
-            ),
-          ),
-          BottomNavigationBarItem(
-            title: Text(''),
-            icon: Icon(
-              Icons.mic,
-              color: Colors.black26,
-            ),
-          ),
-          BottomNavigationBarItem(
-              title: Text(''),
-              icon: Icon(
-                Icons.photo,
-                color: Colors.black26,
-              )),
-        ],
+        ),
       ),
     );
   }
