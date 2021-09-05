@@ -52,8 +52,6 @@ class Database {
     required bool archieve,
     required String editColor,
   }) async {
-    CollectionReference _documentReference =
-        _notesCollection.doc() as CollectionReference<Object?>;
     Map<String, dynamic> data = <String, dynamic>{
       "title": title,
       "description": description,
@@ -62,7 +60,7 @@ class Database {
       "archieve": archieve,
       "editColor": editColor,
     };
-    await _documentReference
+    await _notesCollection
         .add(data)
         .whenComplete(() => print("User added notes"))
         .catchError((e) => print(e));

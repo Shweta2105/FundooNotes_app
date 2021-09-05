@@ -3,6 +3,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:fundo_notes/screens/base_screen.dart';
 import 'package:fundo_notes/screens/create_note.dart';
+import 'package:fundo_notes/screens/display.dart';
 import 'package:hexcolor/hexcolor.dart';
 
 class HomeScreen extends BaseScreen {
@@ -57,40 +58,47 @@ class HomeScreenState extends BaseScreenState {
           CircleAvatar(),
         ],
       ),
-      body: StreamBuilder(
-          stream: ref.snapshots(),
-          builder: (context, AsyncSnapshot<QuerySnapshot> snapshot) {
-            if (!snapshot.hasData) {
-              return Center(
-                child: Text(
-                  'loading',
-                  style: TextStyle(
-                    fontSize: 12,
-                    color: Colors.black12,
+      body: Display_Notes(),
+      /* Padding(
+        padding: const EdgeInsets.all(8.0),
+        child: StreamBuilder(
+            stream: ref.snapshots(),
+            builder: (context, AsyncSnapshot<QuerySnapshot> snapshot) {
+              if (!snapshot.hasData) {
+                return Center(
+                  child: Text(
+                    'loading',
+                    style: TextStyle(
+                      fontSize: 12,
+                      color: Colors.black12,
+                    ),
                   ),
-                ),
-              );
-            } else {
-              return GridView.builder(
-                  gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                      crossAxisCount: 2),
-                  itemCount: snapshot.hasData ? snapshot.data!.docs.length : 0,
-                  itemBuilder: (_, index) {
-                    return Container(
-                      margin: EdgeInsets.all(10),
-                      height: 150,
-                      color: Colors.grey[200],
-                      child: Column(
-                        children: [
-                          // Text(snapshot.data!.docs[index].data['title'])
-                        ],
-                      ),
-                    );
-                  });
-            }
-          }),
+                );
+              } else {
+                return ListView.builder(itemBuilder: itemBuilder)
+                 GridView.builder(
+                    gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                        crossAxisCount: 2),
+                    itemCount:
+                        snapshot.hasData ? snapshot.data!.docs.length : 0,
+                    itemBuilder: (_, index) {
+                      return Container(
+                        margin: EdgeInsets.all(10),
+                        height: 150,
+                        color: Colors.grey[200],
+                        child: Column(
+                          children: [
+                            // Text(snapshot.data!.docs[index].data['title'])
+                          ],
+                        ),
+                      );
+                    });
+              }
+            }),
+      ),*/
 
       //backgroundColor: Colors.white,
+      floatingActionButtonLocation: FloatingActionButtonLocation.endDocked,
       floatingActionButton: FloatingActionButton(
           onPressed: () => {
                 Navigator.push(
@@ -123,7 +131,7 @@ class HomeScreenState extends BaseScreenState {
               IconButton(
                   onPressed: () {},
                   icon: Icon(
-                    Icons.mic,
+                    Icons.mic_none_outlined,
                     size: 25,
                     color: Colors.black,
                   )),

@@ -28,6 +28,122 @@ class Forgot_PasswordScreen extends BaseScreenState {
     });
   }
 
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: Text('Forgot Password',
+            style: TextStyle(
+              color: HexColor('#96C3EB'),
+              fontWeight: FontWeight.w500,
+              fontSize: 25,
+              fontStyle: FontStyle.italic,
+            )),
+      ),
+      body: Container(
+          margin: EdgeInsets.all(10.0),
+          child: ListView(
+            children: <Widget>[
+              Container(
+                alignment: Alignment.center,
+                padding: EdgeInsets.all(10),
+                child: Text(
+                  '',
+                  style: TextStyle(
+                    color: HexColor('#96C3EB'),
+                    fontWeight: FontWeight.w500,
+                    fontSize: 20,
+                  ),
+                ),
+              ),
+              Container(
+                alignment: Alignment.center,
+                padding: EdgeInsets.all(10),
+                child: Card(
+                  color: HexColor('#FFFFFF'),
+                  elevation: 10,
+                  child: Container(
+                    height: 100,
+                    width: 135,
+                    child: Stack(
+                      children: [
+                        Center(
+                          child: Image.asset('assets/Images/fundooIcon.jpg'),
+                        )
+                      ],
+                    ),
+                  ),
+                ),
+              ),
+              Container(
+                padding: EdgeInsets.fromLTRB(10, 10, 10, 0),
+                child: Container(
+                  child: SizedBox(
+                    child: TextField(
+                      controller: emailController,
+                      focusNode: emailFocus,
+                      onTap: _emailRequestFocus,
+                      onChanged: (value) {
+                        if (emailRegExp.hasMatch(value)) {
+                          emailValid = true;
+                        } else {
+                          emailValid = false;
+                        }
+                        setState(() {});
+                      },
+                      style: new TextStyle(
+                          fontStyle: FontStyle.normal,
+                          fontSize: 20,
+                          color: HexColor('#606E74')),
+                      decoration: InputDecoration(
+                          labelText: 'Email',
+                          hintText: 'Enter Email',
+                          errorText: emailValid ? null : "Invalid password",
+                          errorStyle: const TextStyle(fontSize: 15),
+                          labelStyle: TextStyle(
+                              color: emailFocus!.hasFocus
+                                  ? emailValid
+                                      ? Colors.amberAccent
+                                      : Colors.red
+                                  : HexColor('#658292')),
+                          border: OutlineInputBorder(
+                              borderSide:
+                                  BorderSide(color: HexColor('#658292'))),
+                          focusedBorder: OutlineInputBorder(
+                            borderRadius:
+                                const BorderRadius.all(Radius.circular(4)),
+                            borderSide: emailFocus!.hasFocus
+                                ? const BorderSide(
+                                    color: Colors.amber, width: 1.2)
+                                : BorderSide(color: HexColor('#658292')),
+                          )),
+                    ),
+                  ),
+                ),
+              ),
+              Container(
+                  height: 50,
+                  padding: EdgeInsets.fromLTRB(10, 0, 10, 0),
+                  child: RaisedButton(
+                    textColor: Colors.white,
+                    color: Colors.blue,
+                    child: Text('Reset Password'),
+                    onPressed: () {
+                      print(emailController.text);
+                      FirebaseFirestore.instance
+                          .collection('users')
+                          .get()
+                          .then((querySnapshot) {
+                        querySnapshot.docs.forEach((docs) {
+                          print(docs["emailId"]);
+                        });
+                      });
+                    },
+                  )),
+            ],
+          )),
+    );
+  }
+/*
   Widget getAppBar() {
     return AppBar(
       automaticallyImplyLeading: false,
@@ -148,5 +264,5 @@ class Forgot_PasswordScreen extends BaseScreenState {
             ],
           )),
     );
-  }
+  }*/
 }
