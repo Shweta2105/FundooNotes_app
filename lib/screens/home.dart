@@ -11,6 +11,8 @@ class HomeScreen extends BaseScreen {
   HomeScreenState createState() => new HomeScreenState();
 }
 
+bool view = false;
+
 class HomeScreenState extends BaseScreenState {
   CollectionReference ref = FirebaseFirestore.instance.collection('notes');
 
@@ -50,15 +52,18 @@ class HomeScreenState extends BaseScreenState {
         backgroundColor: HexColor('#FFFFFF'),
         actions: <Widget>[
           IconButton(
-              onPressed: () {},
-              icon: const Icon(
-                Icons.grid_view,
-                color: Colors.black,
-              )),
+            icon: Icon(view ? Icons.list_rounded : Icons.grid_view_outlined),
+            color: Colors.black,
+            onPressed: () {
+              setState(() {
+                view = !view;
+              });
+            },
+          ),
           CircleAvatar(),
         ],
       ),
-      body: Display_Notes(),
+      body: _changeView(),
       /* Padding(
         padding: const EdgeInsets.all(8.0),
         child: StreamBuilder(
@@ -117,14 +122,14 @@ class HomeScreenState extends BaseScreenState {
               IconButton(
                   onPressed: () {},
                   icon: Icon(
-                    Icons.check_box,
+                    Icons.check_box_outlined,
                     size: 25,
                     color: Colors.black,
                   )),
               IconButton(
                   onPressed: () {},
                   icon: Icon(
-                    Icons.color_lens,
+                    Icons.color_lens_outlined,
                     size: 25,
                     color: Colors.black,
                   )),
@@ -138,7 +143,7 @@ class HomeScreenState extends BaseScreenState {
               IconButton(
                   onPressed: () {},
                   icon: Icon(
-                    Icons.photo,
+                    Icons.photo_album_outlined,
                     size: 25,
                     color: Colors.black,
                   )),
@@ -147,5 +152,13 @@ class HomeScreenState extends BaseScreenState {
         ),
       ),
     );
+  }
+}
+
+_changeView() {
+  if (view == false) {
+    return Display_Notes();
+  } else {
+    return GridviewNotes();
   }
 }

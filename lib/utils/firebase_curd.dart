@@ -1,6 +1,7 @@
 import 'dart:math';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:flutter/cupertino.dart';
 
 final FirebaseFirestore dataStore = FirebaseFirestore.instance;
 final CollectionReference _mainCollection = dataStore.collection("users");
@@ -50,7 +51,9 @@ class Database {
     required bool pinn,
     required String reminder,
     required bool archieve,
-    required String editColor,
+    required Color editColor,
+    required bool delete,
+    required String emailId,
   }) async {
     Map<String, dynamic> data = <String, dynamic>{
       "title": title,
@@ -59,6 +62,8 @@ class Database {
       "reminder": reminder,
       "archieve": archieve,
       "editColor": editColor,
+      "delete": delete,
+      "emailId": emailId,
     };
     await _notesCollection
         .add(data)

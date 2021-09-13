@@ -1,9 +1,12 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:fundo_notes/screens/base_screen.dart';
+import 'package:fundo_notes/screens/colors.dart';
 import 'package:fundo_notes/utils/firebase_curd.dart';
 import 'package:hexcolor/hexcolor.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class Create_note extends BaseScreen {
   @override
@@ -12,6 +15,9 @@ class Create_note extends BaseScreen {
 
 class Create_note_state extends BaseScreenState {
   CollectionReference ref = FirebaseFirestore.instance.collection('notes');
+  late String emailId;
+  FocusNode myFocus = new FocusNode();
+  late Color _color = Colors.white;
 
   TextEditingController titleController = new TextEditingController();
   TextEditingController notes_Controller = new TextEditingController();
@@ -19,13 +25,22 @@ class Create_note_state extends BaseScreenState {
   FocusNode notesFocus = new FocusNode();
   bool pinn = false;
   bool archieve = false;
+  bool delete = false;
   String reminder = '';
-  String editColor = '';
+
+  void getLoginData() async {
+    var loginData = await SharedPreferences.getInstance();
+    setState(() {
+      emailId = loginData.getString('emailId')!;
+      print('UserEmail:$emailId');
+      print('_color:$_color');
+    });
+  }
+
   @override
   void initState() {
-    titleController = TextEditingController();
-
     super.initState();
+    getLoginData();
   }
 
   _titleRequestFocus() {
@@ -43,118 +58,202 @@ class Create_note_state extends BaseScreenState {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: _color,
       appBar: AppBar(
-        automaticallyImplyLeading: false,
-        backgroundColor: Colors.white,
+        backwardsCompatibility: false,
+        systemOverlayStyle: SystemUiOverlayStyle(statusBarColor: _color),
+        backgroundColor: _color,
         elevation: 0.0,
+        bottom: PreferredSize(
+            preferredSize: Size.fromHeight(20),
+            child: Container(
+                child: Padding(
+                    padding: const EdgeInsets.only(top: 5, bottom: 10),
+                    child: Material(
+                        color: _color,
+                        child: Row(
+                            mainAxisSize: MainAxisSize.min,
+                            mainAxisAlignment: MainAxisAlignment.start,
+                            children: [
+                              IconButton(
+                                  onPressed: () {
+                                    if (titleController.text.isEmpty &&
+                                        notes_Controller.text.isEmpty) {
+                                      Navigator.pop(context);
+                                    } else {
+                                      Database.createNewNote(
+                                              title: titleController.text,
+                                              description:
+                                                  notes_Controller.text,
+                                              pinn: pinn,
+                                              reminder: reminder,
+                                              archieve: archieve,
+                                              editColor: _color,
+                                              delete: delete,
+                                              emailId: emailId)
+                                          .whenComplete(
+                                              () => Navigator.pop(context));
+                                    }
+                                  },
+                                  icon: const Icon(
+                                    Icons.arrow_back_ios_rounded,
+                                    size: 25,
+                                    color: Colors.black,
+                                  )),
+                              IconButton(
+                                icon: Icon(
+                                    pinn
+                                        ? Icons.push_pin_rounded
+                                        : Icons.push_pin_outlined,
+                                    size: 25),
+                                color: Colors.black,
+                                onPressed: () {
+                                  setState(() {
+                                    pinn = !pinn;
+                                  });
+                                },
+                              ),
+                              IconButton(
+                                  onPressed: () {},
+                                  icon: Icon(
+                                    Icons.notification_add_outlined,
+                                    color: Colors.black,
+                                  )),
+                              IconButton(
+                                icon: Icon(archieve
+                                    ? Icons.archive_rounded
+                                    : Icons.archive_outlined),
+                                color: Colors.black,
+                                onPressed: () {
+                                  setState(() {
+                                    archieve = !archieve;
+                                  });
+                                },
+                              ),
+                            ]))))),
         actions: <Widget>[
           Padding(
             padding: EdgeInsets.only(right: 218),
-            child: IconButton(
-                onPressed: () {
-                  /* ref.add({
-                    'title': titleController.text,
-                    'description': notes_Controller.text,
-                  }).whenComplete(() => Navigator.pop(context));*/
-                  Database.createNewNote(
-                          title: titleController.text,
-                          description: notes_Controller.text,
-                          pinn: pinn,
-                          reminder: reminder,
-                          archieve: archieve,
-                          editColor: editColor)
-                      .whenComplete(() => Navigator.pop(context));
-                },
-                icon: const Icon(
-                  Icons.arrow_back,
-                  color: Colors.black,
-                )),
-          ),
-          IconButton(
-            icon: Icon(pinn ? Icons.push_pin_rounded : Icons.push_pin_outlined),
-            color: Colors.black,
-            onPressed: () {
-              setState(() {
-                pinn = !pinn;
-              });
-            },
-          ),
-          IconButton(
-              onPressed: () {},
-              icon: Icon(
-                Icons.notification_add_outlined,
-                color: Colors.black,
-              )),
-          IconButton(
-            icon:
-                Icon(archieve ? Icons.archive_rounded : Icons.archive_outlined),
-            color: Colors.black,
-            onPressed: () {
-              setState(() {
-                archieve = !archieve;
-              });
-            },
-          ),
+          )
         ],
       ),
       body: new Container(
-        padding: EdgeInsets.all(15.0),
-        child: Column(
-          children: <Widget>[
-            Container(
-              alignment: Alignment.center,
-              child: TextFormField(
+          margin: EdgeInsets.only(bottom: 20.0),
+          child: Container(
+            child: Column(children: [
+              TextField(
                 controller: titleController,
-                textInputAction: TextInputAction.newline,
-                keyboardType: TextInputType.multiline,
-                maxLines: null,
+                focusNode: myFocus,
+                cursorColor: Colors.black87,
+                maxLines: 1,
                 style: new TextStyle(
+                    height: 1,
                     fontStyle: FontStyle.normal,
                     fontSize: 20,
                     color: HexColor('#606E74')),
                 decoration: InputDecoration(
-                  hintText: 'Title',
+                    hintText: 'Title',
+                    border: InputBorder.none,
+                    hintStyle: TextStyle(
+                      color: Colors.black38,
+                    )),
+              ),
+              SizedBox(
+                height: 1,
+              ),
+              TextField(
+                controller: notes_Controller,
+                cursorColor: Colors.black54,
+                maxLines: 12,
+                style: new TextStyle(
+                    fontStyle: FontStyle.normal,
+                    fontSize: 15,
+                    color: HexColor('#606E74')),
+                decoration: InputDecoration(
+                  hintText: 'Description',
                   border: InputBorder.none,
                 ),
               ),
-            ),
-            Expanded(
-              child: Container(
-                decoration:
-                    BoxDecoration(border: Border.all(color: Colors.white)),
-                child: TextFormField(
-                  controller: notes_Controller,
-                  maxLines: null,
-                  expands: true,
-                  style: new TextStyle(
-                      fontStyle: FontStyle.normal,
-                      fontSize: 15,
-                      color: HexColor('#606E74')),
-                  decoration: InputDecoration(
-                    hintText: 'Description',
-                    border: InputBorder.none,
-                  ),
-                ),
-              ),
-            )
-          ],
-        ),
-      ),
+            ]),
+            padding: EdgeInsets.all(20),
+          )),
       bottomNavigationBar: BottomAppBar(
         child: Container(
           color: Colors.white,
           child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            mainAxisAlignment: MainAxisAlignment.start,
             children: <Widget>[
               IconButton(
-                  onPressed: () {},
+                  onPressed: () {
+                    showModalBottomSheet(
+                        backgroundColor: _color,
+                        context: context,
+                        builder: (context) {
+                          return Container(
+                            height: 120,
+                            child: SizedBox(
+                              width: 50,
+                              height: 50,
+                              child: Color_slider(
+                                  onSelectColor: (value) {
+                                    setState(() {
+                                      _color = value;
+                                    });
+                                  },
+                                  availableColors: [
+                                    Colors.white,
+                                    Colors.blueAccent,
+                                    Colors.greenAccent,
+                                    Colors.yellowAccent,
+                                    Colors.orangeAccent,
+                                    Colors.redAccent,
+                                    Colors.lightGreenAccent,
+                                    Colors.grey.shade500,
+                                    Colors.pinkAccent,
+                                    Colors.teal,
+                                    Colors.indigoAccent,
+                                    Colors.purpleAccent,
+                                    Colors.amberAccent,
+                                    Colors.cyanAccent,
+                                  ],
+                                  initialColor: Colors.white),
+                            ),
+                          );
+                        });
+                  },
                   icon: Icon(
                     Icons.color_lens_outlined,
                     size: 25,
                     color: Colors.black,
                   )),
               IconButton(
-                  onPressed: () {},
+                  onPressed: () {
+                    showModalBottomSheet<void>(
+                        context: context,
+                        builder: (BuildContext context) {
+                          return Container(
+                            height: 200,
+                            width: 100,
+                            //child: Center(
+                            child: Column(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              mainAxisSize: MainAxisSize.min,
+                              children: <Widget>[
+                                TextButton(
+                                    onPressed: () {
+                                      setState(() {
+                                        delete != delete;
+                                      });
+                                    },
+                                    child: Text(
+                                      'Delete',
+                                    ))
+                              ],
+                            ),
+                            // ),
+                          );
+                        });
+                  },
                   icon: Icon(
                     Icons.more_vert,
                     size: 25,
