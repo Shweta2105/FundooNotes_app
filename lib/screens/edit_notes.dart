@@ -5,6 +5,8 @@ import 'package:fundo_notes/utils/firebase_curd.dart';
 import 'package:hexcolor/hexcolor.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
+import 'display.dart';
+
 class EditNotePage extends BaseScreen {
   EditNotePageState createstate() => new EditNotePageState();
   late final String title;
@@ -34,8 +36,17 @@ class EditNotePageState extends State<EditNotePage> {
 
   @override
   void initState() {
-    titleController = TextEditingController();
-    notes_Controller = TextEditingController();
+    titleController = TextEditingController(
+      text: widget.docToEdit['title'],
+    );
+    notes_Controller = TextEditingController(
+      text: widget.docToEdit['description'],
+    );
+    String colorTesting = widget.docToEdit['editColor'].toString();
+    String valueString = colorTesting.split('(0x')[1].split(')')[0];
+    int value = int.parse(valueString, radix: 16);
+    Color otherColor = new Color(value);
+    _color = otherColor;
     super.initState();
   }
 
@@ -43,7 +54,7 @@ class EditNotePageState extends State<EditNotePage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        automaticallyImplyLeading: false,
+        //automaticallyImplyLeading: false,
         backgroundColor: Colors.white,
         elevation: 0.0,
         actions: <Widget>[
@@ -61,10 +72,13 @@ class EditNotePageState extends State<EditNotePage> {
                           pinn: pinn,
                           reminder: reminder,
                           archieve: archieve,
-                          editColor: _color,
+                          editColor: '$_color',
                           delete: delete,
                           emailId: emailId)
-                      .whenComplete(() => Navigator.pop(context));
+                      .whenComplete(() => Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) => Display_Notes())));
                 },
                 icon: const Icon(
                   Icons.arrow_back,

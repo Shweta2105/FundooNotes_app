@@ -51,7 +51,7 @@ class Database {
     required bool pinn,
     required String reminder,
     required bool archieve,
-    required Color editColor,
+    required String editColor,
     required bool delete,
     required String emailId,
   }) async {

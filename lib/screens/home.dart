@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:fundo_notes/screens/base_screen.dart';
 import 'package:fundo_notes/screens/create_note.dart';
 import 'package:fundo_notes/screens/display.dart';
+import 'package:fundo_notes/utils/navigationDrawer.dart';
 import 'package:hexcolor/hexcolor.dart';
 
 class HomeScreen extends BaseScreen {
@@ -15,6 +16,7 @@ bool view = false;
 
 class HomeScreenState extends BaseScreenState {
   CollectionReference ref = FirebaseFirestore.instance.collection('notes');
+  final GlobalKey<ScaffoldState> _scaffoldKey = new GlobalKey<ScaffoldState>();
 
   void initState() {
     super.initState();
@@ -41,13 +43,19 @@ class HomeScreenState extends BaseScreenState {
     );
   }*/
 
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
+      key: _scaffoldKey,
       appBar: AppBar(
         elevation: 0.0,
-        leading: Icon(
-          Icons.menu,
-          color: Colors.black,
+        // ignore: prefer_const_constructors
+        leading: IconButton(
+          icon: Icon(
+            Icons.menu,
+            color: Colors.black,
+          ),
+          onPressed: () => _scaffoldKey.currentState!.openDrawer(),
         ),
         backgroundColor: HexColor('#FFFFFF'),
         actions: <Widget>[
@@ -64,6 +72,7 @@ class HomeScreenState extends BaseScreenState {
         ],
       ),
       body: _changeView(),
+      drawer: NavigationDrawer(),
       /* Padding(
         padding: const EdgeInsets.all(8.0),
         child: StreamBuilder(

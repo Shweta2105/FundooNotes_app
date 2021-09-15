@@ -18,7 +18,6 @@ class Create_note_state extends BaseScreenState {
   late String emailId;
   FocusNode myFocus = new FocusNode();
   late Color _color = Colors.white;
-
   TextEditingController titleController = new TextEditingController();
   TextEditingController notes_Controller = new TextEditingController();
   FocusNode titleFocus = new FocusNode();
@@ -88,7 +87,7 @@ class Create_note_state extends BaseScreenState {
                                               pinn: pinn,
                                               reminder: reminder,
                                               archieve: archieve,
-                                              editColor: _color,
+                                              editColor: '$_color',
                                               delete: delete,
                                               emailId: emailId)
                                           .whenComplete(
@@ -96,16 +95,13 @@ class Create_note_state extends BaseScreenState {
                                     }
                                   },
                                   icon: const Icon(
-                                    Icons.arrow_back_ios_rounded,
-                                    size: 25,
+                                    Icons.arrow_back,
                                     color: Colors.black,
                                   )),
                               IconButton(
-                                icon: Icon(
-                                    pinn
-                                        ? Icons.push_pin_rounded
-                                        : Icons.push_pin_outlined,
-                                    size: 25),
+                                icon: Icon(pinn
+                                    ? Icons.push_pin_rounded
+                                    : Icons.push_pin_outlined),
                                 color: Colors.black,
                                 onPressed: () {
                                   setState(() {
@@ -138,50 +134,53 @@ class Create_note_state extends BaseScreenState {
         ],
       ),
       body: new Container(
-          margin: EdgeInsets.only(bottom: 20.0),
-          child: Container(
-            child: Column(children: [
-              TextField(
+        padding: EdgeInsets.all(15.0),
+        child: Column(
+          children: <Widget>[
+            Container(
+              alignment: Alignment.center,
+              child: TextFormField(
                 controller: titleController,
-                focusNode: myFocus,
-                cursorColor: Colors.black87,
-                maxLines: 1,
+                textInputAction: TextInputAction.newline,
+                keyboardType: TextInputType.multiline,
+                maxLines: null,
                 style: new TextStyle(
-                    height: 1,
                     fontStyle: FontStyle.normal,
                     fontSize: 20,
                     color: HexColor('#606E74')),
                 decoration: InputDecoration(
-                    hintText: 'Title',
-                    border: InputBorder.none,
-                    hintStyle: TextStyle(
-                      color: Colors.black38,
-                    )),
-              ),
-              SizedBox(
-                height: 1,
-              ),
-              TextField(
-                controller: notes_Controller,
-                cursorColor: Colors.black54,
-                maxLines: 12,
-                style: new TextStyle(
-                    fontStyle: FontStyle.normal,
-                    fontSize: 15,
-                    color: HexColor('#606E74')),
-                decoration: InputDecoration(
-                  hintText: 'Description',
+                  hintText: 'Title',
                   border: InputBorder.none,
                 ),
               ),
-            ]),
-            padding: EdgeInsets.all(20),
-          )),
+            ),
+            Expanded(
+              child: Container(
+                decoration:
+                    BoxDecoration(border: Border.all(color: Colors.white)),
+                child: TextFormField(
+                  controller: notes_Controller,
+                  maxLines: null,
+                  expands: true,
+                  style: new TextStyle(
+                      fontStyle: FontStyle.normal,
+                      fontSize: 15,
+                      color: HexColor('#606E74')),
+                  decoration: InputDecoration(
+                    hintText: 'Description',
+                    border: InputBorder.none,
+                  ),
+                ),
+              ),
+            )
+          ],
+        ),
+      ),
       bottomNavigationBar: BottomAppBar(
         child: Container(
           color: Colors.white,
           child: Row(
-            mainAxisAlignment: MainAxisAlignment.start,
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: <Widget>[
               IconButton(
                   onPressed: () {
