@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'dart:developer' as developer;
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -59,78 +60,55 @@ class Create_note_state extends BaseScreenState {
     return Scaffold(
       backgroundColor: _color,
       appBar: AppBar(
-        backwardsCompatibility: false,
-        systemOverlayStyle: SystemUiOverlayStyle(statusBarColor: _color),
+        automaticallyImplyLeading: false,
         backgroundColor: _color,
         elevation: 0.0,
-        bottom: PreferredSize(
-            preferredSize: Size.fromHeight(20),
-            child: Container(
-                child: Padding(
-                    padding: const EdgeInsets.only(top: 5, bottom: 10),
-                    child: Material(
-                        color: _color,
-                        child: Row(
-                            mainAxisSize: MainAxisSize.min,
-                            mainAxisAlignment: MainAxisAlignment.start,
-                            children: [
-                              IconButton(
-                                  onPressed: () {
-                                    if (titleController.text.isEmpty &&
-                                        notes_Controller.text.isEmpty) {
-                                      Navigator.pop(context);
-                                    } else {
-                                      Database.createNewNote(
-                                              title: titleController.text,
-                                              description:
-                                                  notes_Controller.text,
-                                              pinn: pinn,
-                                              reminder: reminder,
-                                              archieve: archieve,
-                                              editColor: '$_color',
-                                              delete: delete,
-                                              emailId: emailId)
-                                          .whenComplete(
-                                              () => Navigator.pop(context));
-                                    }
-                                  },
-                                  icon: const Icon(
-                                    Icons.arrow_back,
-                                    color: Colors.black,
-                                  )),
-                              IconButton(
-                                icon: Icon(pinn
-                                    ? Icons.push_pin_rounded
-                                    : Icons.push_pin_outlined),
-                                color: Colors.black,
-                                onPressed: () {
-                                  setState(() {
-                                    pinn = !pinn;
-                                  });
-                                },
-                              ),
-                              IconButton(
-                                  onPressed: () {},
-                                  icon: Icon(
-                                    Icons.notification_add_outlined,
-                                    color: Colors.black,
-                                  )),
-                              IconButton(
-                                icon: Icon(archieve
-                                    ? Icons.archive_rounded
-                                    : Icons.archive_outlined),
-                                color: Colors.black,
-                                onPressed: () {
-                                  setState(() {
-                                    archieve = !archieve;
-                                  });
-                                },
-                              ),
-                            ]))))),
         actions: <Widget>[
           Padding(
             padding: EdgeInsets.only(right: 218),
-          )
+            child: IconButton(
+                onPressed: () {
+                  Database.createNewNote(
+                    title: titleController.text,
+                    description: notes_Controller.text,
+                    pinn: pinn,
+                    reminder: reminder,
+                    archieve: archieve,
+                    editColor: '$_color',
+                    delete: delete,
+                    emailId: emailId,
+                  ).whenComplete(() => Navigator.pop(context));
+                },
+                icon: const Icon(
+                  Icons.arrow_back,
+                  color: Colors.black,
+                )),
+          ),
+          IconButton(
+            icon: Icon(pinn ? Icons.push_pin_rounded : Icons.push_pin_outlined),
+            color: Colors.black,
+            onPressed: () {
+              setState(() {
+                pinn = !pinn;
+              });
+            },
+          ),
+          IconButton(
+              onPressed: () {},
+              icon: Icon(
+                Icons.notification_add_outlined,
+                color: Colors.black,
+              )),
+          IconButton(
+            icon:
+                Icon(archieve ? Icons.archive_rounded : Icons.archive_outlined),
+            color: Colors.black,
+            onPressed: () {
+              setState(() {
+                archieve = !archieve;
+              });
+            },
+          ),
         ],
       ),
       body: new Container(
@@ -226,33 +204,7 @@ class Create_note_state extends BaseScreenState {
                     color: Colors.black,
                   )),
               IconButton(
-                  onPressed: () {
-                    showModalBottomSheet<void>(
-                        context: context,
-                        builder: (BuildContext context) {
-                          return Container(
-                            height: 200,
-                            width: 100,
-                            //child: Center(
-                            child: Column(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              mainAxisSize: MainAxisSize.min,
-                              children: <Widget>[
-                                TextButton(
-                                    onPressed: () {
-                                      setState(() {
-                                        delete != delete;
-                                      });
-                                    },
-                                    child: Text(
-                                      'Delete',
-                                    ))
-                              ],
-                            ),
-                            // ),
-                          );
-                        });
-                  },
+                  onPressed: () {},
                   icon: Icon(
                     Icons.more_vert,
                     size: 25,

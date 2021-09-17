@@ -1,10 +1,12 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:fundo_notes/screens/base_screen.dart';
 import 'package:fundo_notes/screens/create_note.dart';
 import 'package:fundo_notes/screens/display.dart';
 import 'package:fundo_notes/utils/navigationDrawer.dart';
+import 'package:fundo_notes/utils/uploads_images.dart';
 import 'package:hexcolor/hexcolor.dart';
 
 class HomeScreen extends BaseScreen {
@@ -17,6 +19,8 @@ bool view = false;
 class HomeScreenState extends BaseScreenState {
   CollectionReference ref = FirebaseFirestore.instance.collection('notes');
   final GlobalKey<ScaffoldState> _scaffoldKey = new GlobalKey<ScaffoldState>();
+  TextEditingController textEditingController = TextEditingController();
+  late String searchString;
 
   void initState() {
     super.initState();
@@ -57,6 +61,21 @@ class HomeScreenState extends BaseScreenState {
           ),
           onPressed: () => _scaffoldKey.currentState!.openDrawer(),
         ),
+        title: Column(children: <Widget>[
+          Padding(
+            padding: EdgeInsets.all(15.0),
+            child: Container(
+              // ignore: prefer_const_constructors
+              child: TextField(
+                controller: textEditingController,
+                decoration: InputDecoration(
+                    suffixIcon: IconButton(
+                        onPressed: () => textEditingController.clear(),
+                        icon: Icon(Icons.clear))),
+              ),
+            ),
+          ),
+        ]),
         backgroundColor: HexColor('#FFFFFF'),
         actions: <Widget>[
           IconButton(
@@ -68,7 +87,12 @@ class HomeScreenState extends BaseScreenState {
               });
             },
           ),
-          CircleAvatar(),
+          IconButton(
+              onPressed: () => Navigator.push(context,
+                  MaterialPageRoute(builder: (context) => UploadedPackage())),
+              icon: CircleAvatar(
+                backgroundColor: Colors.grey,
+              )),
         ],
       ),
       body: _changeView(),

@@ -4,7 +4,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
 
 final FirebaseFirestore dataStore = FirebaseFirestore.instance;
-final CollectionReference _mainCollection = dataStore.collection("users");
+final CollectionReference _collectionReference = dataStore.collection("users");
 final CollectionReference _notesCollection = dataStore.collection("notes");
 
 class Database {
@@ -15,7 +15,7 @@ class Database {
     required String emailId,
     required String password,
   }) async {
-    DocumentReference _documentReference = _mainCollection.doc();
+    DocumentReference _documentReference = _collectionReference.doc();
     Map<String, dynamic> data = <String, dynamic>{
       "fname": fname,
       "lname": lname,
@@ -32,7 +32,7 @@ class Database {
     required String emailId,
     required String password,
   }) async {
-    DocumentReference _documentReference = _mainCollection.doc();
+    DocumentReference _documentReference = _collectionReference.doc();
     Map<String, dynamic> data = <String, dynamic>{
       "emailId": emailId,
       "password": password,
@@ -40,6 +40,49 @@ class Database {
     await _documentReference
         .update(data)
         .whenComplete(() => print("User Updated password in fiebase"))
+        .catchError((e) => print(e));
+  }
+
+  static Future<void> updateItem({
+    required String docId,
+    required String title,
+    required String content,
+    required bool archive,
+    required String color,
+    required bool pin,
+    required String userEmail,
+  }) async {
+    DocumentReference documentReference = _notesCollection.doc(docId);
+
+    Map<String, dynamic> data = <String, dynamic>{
+      "docId": docId,
+      "title": title,
+      "content": content,
+      "archive": archive,
+      "color": color,
+      "pin": pin,
+      "userEmail": userEmail,
+    };
+
+    await documentReference
+        .update(data)
+        .whenComplete(() => print("Note updated in the database"))
+        .catchError((e) => print(e));
+  }
+
+  Future<void> updateUrl({
+    required String docId,
+    required String image,
+  }) async {
+    DocumentReference docref = _collectionReference.doc(docId);
+
+    Map<String, dynamic> data = <String, dynamic>{
+      "docId": docId,
+      "image": image,
+    };
+    await docref
+        .update(data)
+        .whenComplete(() => print("Note updated in the database"))
         .catchError((e) => print(e));
   }
 
