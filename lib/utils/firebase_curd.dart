@@ -44,18 +44,19 @@ class Database {
   }
 
   static Future<void> updateItem({
-    required String docId,
+    //required String docId,
     required String title,
     required String content,
     required bool archive,
+    required bool delete,
     required String color,
     required bool pin,
     required String userEmail,
   }) async {
-    DocumentReference documentReference = _notesCollection.doc(docId);
+    DocumentReference documentReference = _notesCollection.doc();
 
     Map<String, dynamic> data = <String, dynamic>{
-      "docId": docId,
+      //"docId": docId,
       "title": title,
       "content": content,
       "archive": archive,

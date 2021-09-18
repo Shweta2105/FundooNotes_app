@@ -17,6 +17,7 @@ class Create_note extends BaseScreen {
 class Create_note_state extends BaseScreenState {
   CollectionReference ref = FirebaseFirestore.instance.collection('notes');
   late String emailId;
+  late SharedPreferences loginData;
   FocusNode myFocus = new FocusNode();
   late Color _color = Colors.white;
   TextEditingController titleController = new TextEditingController();
@@ -29,7 +30,7 @@ class Create_note_state extends BaseScreenState {
   String reminder = '';
 
   void getLoginData() async {
-    var loginData = await SharedPreferences.getInstance();
+    loginData = await SharedPreferences.getInstance();
     setState(() {
       emailId = loginData.getString('emailId')!;
       print('UserEmail:$emailId');
@@ -68,16 +69,23 @@ class Create_note_state extends BaseScreenState {
             padding: EdgeInsets.only(right: 218),
             child: IconButton(
                 onPressed: () {
-                  Database.createNewNote(
-                    title: titleController.text,
-                    description: notes_Controller.text,
-                    pinn: pinn,
-                    reminder: reminder,
-                    archieve: archieve,
-                    editColor: '$_color',
-                    delete: delete,
-                    emailId: emailId,
-                  ).whenComplete(() => Navigator.pop(context));
+                  var title = titleController.text;
+                  var notes = notes_Controller.text;
+                  if (title.isEmpty && notes.isEmpty) {
+                    print('Notes required');
+                    Navigator.pop(context);
+                  } else {
+                    Database.createNewNote(
+                      title: titleController.text,
+                      description: notes_Controller.text,
+                      pinn: pinn,
+                      reminder: reminder,
+                      archieve: archieve,
+                      editColor: '$_color',
+                      delete: delete,
+                      emailId: emailId,
+                    ).whenComplete(() => Navigator.pop(context));
+                  }
                 },
                 icon: const Icon(
                   Icons.arrow_back,

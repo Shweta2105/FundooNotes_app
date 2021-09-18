@@ -72,7 +72,7 @@ class _UploadedPackageState extends State<UploadedPackage> {
         print(docs.id);
 
         if (docs["emailId"] == email) {
-          updateUrl(docId: docs.reference.id, image: imageUrl);
+          // updateUrl(docId: docs.reference.id, image: imageUrl);
           uploadImage();
           print(docs.id);
           print(email);
@@ -116,7 +116,7 @@ class _UploadedPackageState extends State<UploadedPackage> {
           )
         ],
       ),
-      // ignore: unnecessary_new
+      body: ImageGet(),
     );
   }
 
@@ -125,94 +125,95 @@ class _UploadedPackageState extends State<UploadedPackage> {
       body: Center(
         child: Container(
           width: double.infinity,
-          child: Column(
-            children: [
-              SizedBox(
-                height: 60,
+          child: Column(children: [
+            SizedBox(
+              height: 60,
+            ),
+            Text(
+              "Profile Picture",
+              style: TextStyle(fontSize: 25, fontWeight: FontWeight.w400),
+            ),
+            SizedBox(
+              height: 15,
+            ),
+            Container(
+              // padding: EdgeInsets.only(left: 10),
+              child: Text(
+                "Add profile picture for identity",
+                style: TextStyle(fontSize: 15, fontWeight: FontWeight.normal),
               ),
-              Text(
-                "Profile Picture",
-                style: TextStyle(fontSize: 25, fontWeight: FontWeight.w400),
+            ),
+            SizedBox(
+              height: 15,
+            ),
+            Container(
+              // padding: EdgeInsets.only(left: 10),
+              child: Text(
+                "You can change it Whenever you need to change",
+                style: TextStyle(fontSize: 15, fontWeight: FontWeight.normal),
               ),
-              SizedBox(
-                height: 15,
-              ),
-              Text(
-                "Profile Picture",
-                style: TextStyle(fontSize: 25, fontWeight: FontWeight.w400),
-              ),
-              Container(
-                child: Text(
-                  "Add picture to your account",
-                  style: TextStyle(fontSize: 15, fontWeight: FontWeight.normal),
-                ),
-              ),
-              SizedBox(
-                height: 50,
-              ),
-              _image != null
-                  ? CircleAvatar(
-                      child: ClipOval(
-                        child: Image.network(_image!),
+            ),
+
+            SizedBox(
+              height: 60,
+            ),
+            //_imagePath != null
+            _image != null
+                ? CircleAvatar(
+                    radius: 110, backgroundImage: NetworkImage(_image!))
+                : CircleAvatar(
+                    radius: 110,
+                    child: Icon(Icons.person),
+                  ),
+            // width: size * 2, height: size * 2, fit: BoxFit.cover),
+            // radius: size,
+
+            SizedBox(
+              height: 30,
+            ),
+            FlatButton(
+                onPressed: () {
+                  selectImage();
+                },
+                child: Container(
+                  width: 300,
+                  height: 50,
+                  child: Row(
+                    children: [
+                      SizedBox(
+                        width: 70,
                       ),
-                      radius: 100,
-                    )
-                  : CircleAvatar(
-                      child: Icon(
-                        Icons.person,
-                        color: Colors.white,
-                        size: 150,
+                      Icon(Icons.add_a_photo_outlined),
+                      SizedBox(
+                        width: 10,
                       ),
-                      backgroundColor: Colors.orange,
-                    ),
-              SizedBox(
-                height: 20,
-              ),
-              FlatButton(
-                  onPressed: () {
-                    selectImage();
-                  },
-                  child: Container(
-                    width: 200,
-                    height: 40,
-                    child: Row(
-                      children: [
-                        SizedBox(
-                          width: 70,
-                        ),
-                        Icon(Icons.add_a_photo_outlined),
-                        SizedBox(
-                          width: 10,
-                        ),
-                        Text("Select Picture"),
-                      ],
-                    ),
-                  )),
-              SizedBox(
-                height: 20,
-              ),
-              FlatButton(
-                  onPressed: () {
-                    getAndUpdateImage();
-                  },
-                  child: Container(
-                    width: 200,
-                    height: 40,
-                    child: Row(
-                      children: [
-                        SizedBox(
-                          width: 70,
-                        ),
-                        Icon(Icons.save),
-                        SizedBox(
-                          width: 10,
-                        ),
-                        Text("Save Profile Picture"),
-                      ],
-                    ),
-                  )),
-            ],
-          ),
+                      Text("Add profile picture")
+                    ],
+                  ),
+                  color: Colors.cyan,
+                )),
+            SizedBox(
+              height: 20,
+            ),
+            FlatButton(
+                onPressed: () {
+                  getAndUpdateImage();
+                },
+                //updateUrlInFirebase();
+                child: Container(
+                  width: 300,
+                  height: 50,
+                  child: Row(
+                    children: [
+                      SizedBox(
+                        width: 80,
+                      ),
+                      Text("Save profile picture")
+                    ],
+                  ),
+                  color: Colors.cyan,
+                )),
+          ]),
         ),
       ),
     );

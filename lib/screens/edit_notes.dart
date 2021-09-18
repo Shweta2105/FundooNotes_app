@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:fundo_notes/screens/base_screen.dart';
 import 'package:fundo_notes/utils/firebase_curd.dart';
 import 'package:hexcolor/hexcolor.dart';
@@ -53,64 +54,78 @@ class EditNotePageState extends State<EditNotePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: _color,
       appBar: AppBar(
         //automaticallyImplyLeading: false,
-        backgroundColor: Colors.white,
+        backwardsCompatibility: false,
+        systemOverlayStyle: SystemUiOverlayStyle(statusBarColor: _color),
+        backgroundColor: _color,
         elevation: 0.0,
-        actions: <Widget>[
-          Padding(
-            padding: EdgeInsets.only(right: 218),
-            child: IconButton(
-                onPressed: () {
-                  /* ref.add({
-                    'title': titleController.text,
-                    'description': notes_Controller.text,
-                  }).whenComplete(() => Navigator.pop(context));*/
-                  Database.createNewNote(
-                          title: titleController.text,
-                          description: notes_Controller.text,
-                          pinn: pinn,
-                          reminder: reminder,
-                          archieve: archieve,
-                          editColor: '$_color',
-                          delete: delete,
-                          emailId: emailId)
-                      .whenComplete(() => Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                              builder: (context) => Display_Notes())));
-                },
-                icon: const Icon(
-                  Icons.arrow_back,
-                  color: Colors.black,
-                )),
+        bottom: PreferredSize(
+          preferredSize: Size.fromHeight(20),
+          child: Container(
+            child: Padding(
+              padding: const EdgeInsets.only(top: 5, bottom: 10),
+              child: Material(
+                color: _color,
+                child: Row(
+                  mainAxisSize: MainAxisSize.min,
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  children: [
+                    IconButton(
+                        onPressed: () async {
+                          Database.updateItem(
+                              //docId: widget.documentId,
+                              title: titleController.text,
+                              content: notes_Controller.text,
+                              archive: archieve,
+                              delete: delete,
+                              pin: pinn,
+                              color: '$_color',
+                              userEmail: '$emailId');
+                          Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (context) => Display_Notes()));
+                        },
+                        icon: const Icon(
+                          Icons.arrow_back,
+                          color: Colors.black,
+                        )),
+                    IconButton(
+                      icon: Icon(pinn
+                          ? Icons.push_pin_rounded
+                          : Icons.push_pin_outlined),
+                      color: Colors.black,
+                      onPressed: () {
+                        setState(() {
+                          pinn = !pinn;
+                        });
+                      },
+                    ),
+                    IconButton(
+                        onPressed: () {},
+                        icon: Icon(
+                          Icons.notification_add_outlined,
+                          color: Colors.black,
+                        )),
+                    IconButton(
+                      icon: Icon(archieve
+                          ? Icons.archive_rounded
+                          : Icons.archive_outlined),
+                      color: Colors.black,
+                      onPressed: () {
+                        setState(() {
+                          archieve = !archieve;
+                        });
+                      },
+                    ),
+                  ],
+                ),
+              ),
+            ),
           ),
-          IconButton(
-            icon: Icon(pinn ? Icons.push_pin_rounded : Icons.push_pin_outlined),
-            color: Colors.black,
-            onPressed: () {
-              setState(() {
-                pinn = !pinn;
-              });
-            },
-          ),
-          IconButton(
-              onPressed: () {},
-              icon: Icon(
-                Icons.notification_add_outlined,
-                color: Colors.black,
-              )),
-          IconButton(
-            icon:
-                Icon(archieve ? Icons.archive_rounded : Icons.archive_outlined),
-            color: Colors.black,
-            onPressed: () {
-              setState(() {
-                archieve = !archieve;
-              });
-            },
-          ),
-        ],
+        ),
       ),
       body: new Container(
         padding: EdgeInsets.all(15.0),
