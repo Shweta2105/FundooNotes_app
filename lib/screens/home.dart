@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:fundo_notes/screens/base_screen.dart';
 import 'package:fundo_notes/screens/create_note.dart';
 import 'package:fundo_notes/screens/display.dart';
+import 'package:fundo_notes/screens/searchpage.dart';
 import 'package:fundo_notes/utils/navigationDrawer.dart';
 import 'package:fundo_notes/utils/uploads_images.dart';
 import 'package:hexcolor/hexcolor.dart';
@@ -25,127 +26,110 @@ class HomeScreenState extends BaseScreenState {
   void initState() {
     super.initState();
   }
-  /* Widget getAppBar() {
-    return AppBar(
-      automaticallyImplyLeading: false,
-      actions: <Widget>[
-        IconButton(
-          icon: const Icon(
-            Icons.menu,
-            color: Colors.black,
-          ),
-          onPressed: () {},
-        ),
-        IconButton(
-            onPressed: () {},
-            icon: const Icon(
-              Icons.list_sharp,
-              color: Colors.black,
-            )),
-        CircleAvatar()
-      ],
-    );
-  }*/
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       key: _scaffoldKey,
+      backgroundColor: Colors.white,
       appBar: AppBar(
-        elevation: 0.0,
-        // ignore: prefer_const_constructors
-        leading: IconButton(
-          icon: Icon(
-            Icons.menu,
-            color: Colors.black,
-          ),
-          onPressed: () => _scaffoldKey.currentState!.openDrawer(),
-        ),
-        title: Column(children: <Widget>[
-          Padding(
-            padding: EdgeInsets.all(15.0),
-            child: Container(
-              // ignore: prefer_const_constructors
-              child: TextField(
-                controller: textEditingController,
-                decoration: InputDecoration(
-                    suffixIcon: IconButton(
-                        onPressed: () => textEditingController.clear(),
-                        icon: Icon(Icons.clear))),
-              ),
-            ),
-          ),
-        ]),
-        backgroundColor: HexColor('#FFFFFF'),
-        actions: <Widget>[
-          IconButton(
-            icon: Icon(view ? Icons.list_rounded : Icons.grid_view_outlined),
-            color: Colors.black,
-            onPressed: () {
-              setState(() {
-                view = !view;
-              });
-            },
-          ),
-          IconButton(
-              onPressed: () => Navigator.push(context,
-                  MaterialPageRoute(builder: (context) => UploadedPackage())),
-              icon: CircleAvatar(
-                backgroundColor: Colors.grey,
-              )),
-        ],
-      ),
-      body: _changeView(),
-      drawer: NavigationDrawer(),
-      /* Padding(
-        padding: const EdgeInsets.all(8.0),
-        child: StreamBuilder(
-            stream: ref.snapshots(),
-            builder: (context, AsyncSnapshot<QuerySnapshot> snapshot) {
-              if (!snapshot.hasData) {
-                return Center(
-                  child: Text(
-                    'loading',
-                    style: TextStyle(
-                      fontSize: 12,
-                      color: Colors.black12,
-                    ),
-                  ),
-                );
-              } else {
-                return ListView.builder(itemBuilder: itemBuilder)
-                 GridView.builder(
-                    gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                        crossAxisCount: 2),
-                    itemCount:
-                        snapshot.hasData ? snapshot.data!.docs.length : 0,
-                    itemBuilder: (_, index) {
-                      return Container(
-                        margin: EdgeInsets.all(10),
-                        height: 150,
-                        color: Colors.grey[200],
-                        child: Column(
+          elevation: 0.0,
+          backgroundColor: HexColor('#FFFFFF'),
+          bottom: PreferredSize(
+              preferredSize: Size.fromHeight(kToolbarHeight),
+              child: Container(
+                  margin: EdgeInsets.only(left: 15, right: 15, bottom: 30),
+                  height: 52,
+                  decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(8),
+                      color: Colors.white,
+                      boxShadow: [
+                        BoxShadow(
+                          color: Colors.grey,
+                          offset: Offset(0.0, 0.0),
+                          blurRadius: 1.0,
+                        )
+                      ]),
+                  child: Padding(
+                      padding: const EdgeInsets.only(right: 10, left: 6),
+                      child: Material(
+                        color: Colors.white,
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          // ignore: prefer_const_constructors
+
                           children: [
-                            // Text(snapshot.data!.docs[index].data['title'])
+                            IconButton(
+                              icon: Icon(
+                                Icons.menu,
+                                color: Colors.black,
+                              ),
+                              onPressed: () =>
+                                  _scaffoldKey.currentState!.openDrawer(),
+                            ),
+                            SizedBox(
+                              width: 0,
+                            ),
+                            GestureDetector(
+                                onTap: () {
+                                  Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                          builder: (context) => SearchNotes()));
+                                },
+                                child: Text(
+                                  "Search your notes",
+                                  style: TextStyle(
+                                    fontSize: 16,
+                                  ),
+                                )),
+                            SizedBox(
+                              width: 55,
+                            ),
+                            IconButton(
+                              icon: Icon(view
+                                  ? Icons.list_rounded
+                                  : Icons.grid_view_outlined),
+                              color: Colors.black,
+                              onPressed: () {
+                                setState(() {
+                                  view = !view;
+                                });
+                              },
+                            ),
+                            IconButton(
+                                onPressed: () => Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                        builder: (context) =>
+                                            UploadedPackage())),
+                                icon: CircleAvatar(
+                                  backgroundColor: Colors.grey,
+                                )),
                           ],
                         ),
-                      );
-                    });
-              }
-            }),
-      ),*/
+                      ))))),
+      body: _changeView(),
+      drawer: NavigationDrawer(),
 
       //backgroundColor: Colors.white,
+
       floatingActionButtonLocation: FloatingActionButtonLocation.endDocked,
       floatingActionButton: FloatingActionButton(
-          onPressed: () => {
-                Navigator.push(
-                    context, MaterialPageRoute(builder: (_) => Create_note())),
-                // Add your onPressed code here!
-              },
-          child: const Icon(
-            Icons.add,
-          )),
+        onPressed: () {},
+        child: Builder(
+            builder: (context) => IconButton(
+                onPressed: () {
+                  Navigator.push(context,
+                      MaterialPageRoute(builder: (context) => Create_note()));
+                },
+                icon: Image.asset("assets/Images/addIcon.jpg"))),
+        foregroundColor: Colors.amber,
+        focusColor: Colors.white10,
+        hoverColor: Colors.green,
+        backgroundColor: Colors.white,
+        splashColor: Colors.tealAccent,
+      ),
       bottomNavigationBar: BottomAppBar(
         child: Container(
           color: Colors.white,

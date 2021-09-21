@@ -36,7 +36,7 @@ class Display_NotesState extends State<Display_Notes> {
                             context,
                             MaterialPageRoute(
                                 builder: (context) =>
-                                    EditNotePage(docToEdit: doc)));
+                                    EditNotePage(editDocument: doc)));
                       },
                       child: Container(
                         padding: EdgeInsets.all(10),
@@ -108,7 +108,7 @@ Widget GridviewNotes() {
                               context,
                               MaterialPageRoute(
                                   builder: (context) =>
-                                      EditNotePage(docToEdit: doc)));
+                                      EditNotePage(editDocument: doc)));
                         },
                         child: Container(
                           padding: EdgeInsets.all(10),

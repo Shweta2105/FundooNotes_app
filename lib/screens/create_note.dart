@@ -102,11 +102,43 @@ class Create_note_state extends BaseScreenState {
             },
           ),
           IconButton(
-              onPressed: () {},
-              icon: Icon(
-                Icons.notification_add_outlined,
-                color: Colors.black,
-              )),
+            icon: Icon(
+              Icons.add_alert_outlined,
+              color: Colors.black,
+            ),
+            onPressed: () {
+              showModalBottomSheet(
+                  context: context,
+                  builder: (context) {
+                    return Column(
+                      mainAxisSize: MainAxisSize.min,
+                      children: <Widget>[
+                        ListTile(
+                            leading: new Icon(Icons.access_time),
+                            title: new Text('Later today'),
+                            trailing: Text('18:00'),
+                            onTap: () {
+                              Navigator.pop(context);
+                            }),
+                        ListTile(
+                          leading: new Icon(Icons.access_time),
+                          title: new Text('Later tomorrow'),
+                          trailing: Text('08:00'),
+                          onTap: () {
+                            Navigator.pop(context);
+                          },
+                        ),
+                        ListTile(
+                            leading: new Icon(Icons.access_time),
+                            title: new Text('Choose a date & time'),
+                            onTap: () {
+                              // _showDialog(context);
+                            }),
+                      ],
+                    );
+                  });
+            },
+          ),
           IconButton(
             icon:
                 Icon(archieve ? Icons.archive_rounded : Icons.archive_outlined),
@@ -212,12 +244,28 @@ class Create_note_state extends BaseScreenState {
                     color: Colors.black,
                   )),
               IconButton(
-                  onPressed: () {},
                   icon: Icon(
                     Icons.more_vert,
                     size: 25,
                     color: Colors.black,
-                  ))
+                  ),
+                  onPressed: () {
+                    showModalBottomSheet(
+                        context: context,
+                        builder: (context) {
+                          return Column(
+                              mainAxisSize: MainAxisSize.min,
+                              children: <Widget>[
+                                ListTile(
+                                  leading: new Icon(Icons.delete_sharp),
+                                  title: new Text('Delete'),
+                                  onTap: () {
+                                    Navigator.pop(context);
+                                  },
+                                ),
+                              ]);
+                        });
+                  })
             ],
           ),
         ),

@@ -78,7 +78,7 @@ class Database {
     DocumentReference docref = _collectionReference.doc(docId);
 
     Map<String, dynamic> data = <String, dynamic>{
-      "docId": docId,
+      //"docId": docId,
       "image": image,
     };
     await docref

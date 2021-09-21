@@ -25,6 +25,7 @@ class _UploadedPackageState extends State<UploadedPackage> {
   var email;
   String? _image;
 
+  late Future<File> imageFile;
   @override
   void initState() {
     super.initState();
@@ -50,8 +51,8 @@ class _UploadedPackageState extends State<UploadedPackage> {
       var snapshot = await _storage.ref().child(_fileName).putFile(imageFile);
 
       var downloadedUrl = await snapshot.ref.getDownloadURL();
-      // SharedPreferences saveimage = await SharedPreferences.getInstance();
-      // saveimage.setString("image", downloadedUrl);
+      SharedPreferences saveimage = await SharedPreferences.getInstance();
+      saveimage.setString("image", downloadedUrl);
       setState(() {
         imageUrl = downloadedUrl;
       });
@@ -71,8 +72,8 @@ class _UploadedPackageState extends State<UploadedPackage> {
         print(docs["emailId"]);
         print(docs.id);
 
-        if (docs["emailId"] == email) {
-          // updateUrl(docId: docs.reference.id, image: imageUrl);
+        if (docs['emailId'] == email) {
+          //updateUrl(docId: docs.reference.id, image: imageUrl);
           uploadImage();
           print(docs.id);
           print(email);
@@ -104,14 +105,9 @@ class _UploadedPackageState extends State<UploadedPackage> {
           IconButton(
             icon: Icon(Icons.logout_outlined),
             onPressed: () async {
-              /*if (emailId != true) {
-                SharedPreferences saveImage =
-                    await SharedPreferences.getInstance();
-                saveImage.remove("image");
-                loginData.setBool('login', true);
-                Navigator.push(context,
-                    MaterialPageRoute(builder: (context) => LoginPage()));
-              }*/
+              UserData.setBool('login', true);
+              Navigator.push(context,
+                  MaterialPageRoute(builder: (context) => LoginPage()));
             },
           )
         ],

@@ -1,6 +1,7 @@
 // ignore: file_names
 // ignore: file_names
 import 'package:flutter/material.dart';
+import 'package:fundo_notes/screens/deleteNote.dart';
 import 'package:fundo_notes/screens/display.dart';
 
 class NavigationDrawer extends StatelessWidget {
@@ -48,8 +49,8 @@ class NavigationDrawer extends StatelessWidget {
           icon: Icons.delete_outline,
           text: 'Deleted',
           onTap: () {
-            /* Navigator.push(context,
-                  MaterialPageRoute(builder: (context) => DeleteNotesPage()));*/
+            Navigator.push(context,
+                MaterialPageRoute(builder: (context) => DeleteNotePage()));
           },
         ),
         Divider(),
